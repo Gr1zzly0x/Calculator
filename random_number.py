@@ -1,44 +1,23 @@
-from flask import Flask, render_template, request
 import random
 
-app = Flask(__name__)
+initial_balance = 10000
+house_edge = 0.1
+wager_requirement_multiplier_min = 5
+wager_requirement_multiplier_max = 10
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/results', methods=['POST'])
-def results():
-    # Get form values
-    balance = float(request.form['balance'])
-    house_edge = float(request.form['house_edge'])
-    wager_requirement_multiplier_min = float(request.form['wager_requirement_multiplier_min'])
-    wager_requirement_multiplier_max = float(request.form['wager_requirement_multiplier_max'])
-
-    # Calculate wager amounts
+def simulate_bets(initial_balance, house_edge, wager_requirement_multiplier, simulations):
+    balance = initial_balance
     bet = balance / 10
-    total_wager_needed_min = balance * wager_requirement_multiplier_min
-    total_wager_needed_max = balance * wager_requirement_multiplier_max
-    simulations = 1000
+    total_wager_needed = balance * wager_requirement_multiplier
 
-    # Define bet_win_lose function
     def bet_win_lose():
-        random_number = random.random()
-        if random_number > 0.5:
-            return True
-        else:
-            return False
+        return random.random() > 0.5
 
-    # Calculate final balance for minimum wager requirement
-    def final_balance_lower():
+    def final_balance():
         total_bet = 0
         bal = balance
-        global bet
-        global house_edge
-        global wager_requirement_multiplier_min
-        global total_wager_needed_min
 
-        while total_bet < total_wager_needed_min and bal > 0:
+        while total_bet < total_wager_needed and bal > 0:
             if bal >= bet:
                 if bet_win_lose():
                     bal += bet * (1-(2*house_edge))
@@ -56,42 +35,21 @@ def results():
 
         return bal
 
-    # Calculate final balance for maximum wager requirement
-    def final_balance_upper():
-        total_bet = 0
-        bal = balance
-        global bet
-        global house_edge
-        global wager_requirement_multiplier_max
-        global total_wager_needed_max
+    sum = 0
+    for _ in range(simulations):
+        sum += final_balance()
 
-        while total_bet < total_wager_needed_max and bal > 0:
-            if bal >= bet:
-                if bet_win_lose():
-                    bal += bet * (1-(2*house_edge))
-                    total_bet += bet
-                else:
-                    bal -= bet
-                    total_bet += bet
-            else:
-                if bet_win_lose():
-                    bal += bal * (1-(2*house_edge))
-                    total_bet += bal
-                else:
-                    bal -= bal
-                    total_bet += bal
+    return sum / simulations
 
-        return bal
+simulations = 100000
 
-sum = 0
-for i in range(simulations):
-    sum += final_balance_lower()
+print("Starting balance: " + str(initial_balance))
+print("House edge: " + str(house_edge))
+print("Wager requirement multiplier: " + str(wager_requirement_multiplier_min))
+print("Average wager multiplier from stats if they are degen: " + str(wager_requirement_multiplier_max))
 
-print(f"The final balance after a {wager_requirement_multiplier_min}x wager requirement of ${total_wager_needed_min} : {sum/simulations}")
+final_balance_min = simulate_bets(initial_balance, house_edge, wager_requirement_multiplier_min, simulations)
+print(f"The final balance after a {wager_requirement_multiplier_min}x wager requirement: {final_balance_min}")
 
-sum = 0
-for i in range(simulations):
-    sum += final_balance_upper()
-
-print(f"The final balance after a {wager_requirement_multiplier_max}x wager requirement of ${total_wager_needed_max} since the streamer played over the minimum : {sum/simulations}")
-       
+final_balance_max = simulate_bets(initial_balance, house_edge, wager_requirement_multiplier_max, simulations)
+print(f"The final balance after a {wager_requirement_multiplier_max}x wager requirement since the streamer played over the minimum: {final_balance_max}")
