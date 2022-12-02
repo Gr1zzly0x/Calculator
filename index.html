@@ -1,0 +1,87 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Streamer Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input, select {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Streamer Calculator</h1>
+    <form action="/" method="POST">
+        <label for="balance">Starting Balance:</label>
+        <input type="number" id="balance" name="balance" step="0.01" required>
+        <label for="house_edge">House Edge (%):</label>
+        <input type="number" id="house_edge" name="house_edge" step="0.01" required>
+        <label for="wager_requirement_multiplier_min">Wager Requirement Multiplier (Minimum):</label>
+        <input type="number" id="wager_requirement_multiplier_min" name="wager_requirement_multiplier_min" step="0.01" required>
+        <label for="wager_requirement_multiplier_max">Wager Requirement Multiplier (Average from Stats):</label>
+        <input type="number" id="wager_requirement_multiplier_max" name="wager_requirement_multiplier_max" step="0.01" required>
+        <button type="submit">Calculate</button>
+    </form>
+</body>
+</html>
+
+<!-- index.html -->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        max-width: 500px;
+        margin: 0 auto;
+        text-align: center;
+        background-color: #eee;
+    }
+    h1 {
+        margin-bottom: 30px;
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    input, select {
+        padding: 10px 20px;
+        margin-bottom: 10px;
+        width: 400px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+    button {
+        padding: 10px 20px;
+        margin-bottom: 30px;
+        border: none;
+        background-color: #333;
+        color: #fff;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    button:hover {
+        background-color: #444;
+    }
+</style>
