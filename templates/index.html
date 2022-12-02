@@ -1,0 +1,20 @@
+<form method="post">
+    <label for="initial_balance">Initial balance:</label>
+    <input type="number" name="initial_balance" id="initial_balance" required>
+    <br>
+    <label for="house_edge">House edge:</label>
+    <input type="number" name="house_edge" id="house_edge" required>
+    <br>
+    <label for="wager_requirement_multiplier_min">Wager requirement multiplier:</label>
+    <input type="number" name="wager_requirement_multiplier_min" id="wager_requirement_multiplier_min" required>
+    <br>
+    <label for="wager_requirement_multiplier_max">Average wager multiplier from stats if they are degen:</label>
+    <input type="number" name="wager_requirement_multiplier_max" id="wager_requirement_multiplier_max" required>
+    <br>
+    <button type="submit">Calculate</button>
+</form>
+
+{% if initial_balance and house_edge and wager_requirement_multiplier_min and wager_requirement_multiplier_max %}
+    <p>The final balance after a {{ wager_requirement_multiplier_min }}x wager requirement: {{ final_balance_min }}</p>
+    <p>The final balance after a {{ wager_requirement_multiplier_max }}x wager requirement since the streamer played over the minimum: {{ final_balance_max }}</p>
+{% endif %}
